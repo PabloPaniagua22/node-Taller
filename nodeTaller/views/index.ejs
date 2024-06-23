@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es-ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conectar Lab Chaco</title>
+    <link rel="stylesheet" href="/nodeTaller/public/css/styles.css">
+</head>
+<body>
+    <div class="logo">
+        <img src="css/img/logo.png" alt="Conectar Lab Chaco Logo">
+    </div>
+    <div class="container">
+        <div class="text-section">
+            <h1>CENTRO EDUCATIVO TECNOLOGICO</h1>
+            <h2>CONECTAR LAB CHACO</h2>
+            <p>Sistema de turnos, recorrido virtual<br>e información institucional</p>
+            <button>BUTTON ➜</button>
+        </div>
+        <div class="carousel">
+            <div class="carousel-container" id="carousel-container">
+                <!-- Las imágenes se cargarán aquí dinámicamente -->
+            </div>
+            <button class="carousel-button prev" onclick="prevSlide()">❮</button>
+            <button class="carousel-button next" onclick="nextSlide()">❯</button>
+        </div>
+    </div>
+    <script>
+        let currentSlide = 0;
+
+function showSlide(index) {
+    const slides = document.querySelectorAll('.carousel-slide');
+    const totalSlides = slides.length;
+    if (index >= totalSlides) {
+        currentSlide = 0;
+    } else if (index < 0) {
+        currentSlide = totalSlides - 1;
+    } else {
+        currentSlide = index;
+    }
+    const newTransformValue = -currentSlide * 100;
+    document.querySelector('.carousel-container').style.transform = `translateX(${newTransformValue}%)`;
+}
+
+function nextSlide() {
+    showSlide(currentSlide + 1);
+}
+
+function prevSlide() {
+    showSlide(currentSlide - 1);
+}
+
+// Auto slide
+setInterval(() => {
+    nextSlide();
+}, 3000); // Cambia cada 3 segundos
+
+ 
+        // Solicitar datos de la tabla y mostrarlos en el carrusel
+ fetch('/api/entradas')
+ .then(response => response.json())
+ .then(data => {
+     const container = document.getElementById('carousel-container');
+     data.forEach(entry => {
+         const img = document.createElement('img');
+         img.src = `/uploads/${entry.imagen}`;
+         img.alt = entry.titulo;
+         img.className = 'carousel-slide';
+         container.appendChild(img);
+     });
+ })
+ .catch(error => console.error('Error:', error));
+
+// Funciones del carrusel (prev y next)
+let slideIndex = 0;
+
+function showSlides(n) {
+ let i;
+ const slides = document.getElementsByClassName('carousel-slide');
+ if (n >= slides.length) { slideIndex = 0; }
+ if (n < 0) { slideIndex = slides.length - 1; }
+ for (i = 0; i < slides.length; i++) {
+     slides[i].style.display = 'none';
+ }
+ slides[slideIndex].style.display = 'block';
+}
+
+function nextSlide() {
+ showSlides(slideIndex += 1);
+}
+
+function prevSlide() {
+ showSlides(slideIndex -= 1);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+ showSlides(slideIndex);
+});
+
+    </script>
+</body>
+</html>

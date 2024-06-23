@@ -46,6 +46,10 @@ app.get('/', (req, res) => {
   res.render('formulario');
 });
 
+app.get('/index', (req, res) => {
+  res.render('index');
+});
+
 // Ruta para procesar el formulario
 app.post('/submit', upload.single('imagen'), (req, res) => {
   const { titulo, comentario } = req.body;
